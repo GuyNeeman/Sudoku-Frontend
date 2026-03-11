@@ -1,11 +1,31 @@
-import { useState } from 'react'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
 import Square from "./Comp/square.jsx";
 
 function App() {
     const size = 9;
     const boxes = size * size;
+
     const [squares, setSquares] = useState(Array(boxes).fill(""));
+
+    useEffect(() => {
+        async function getSudoku() {
+            try {
+                const res = await fetch("http://localhost:8080/api/sudoku/create");
+                const data = await res.json();
+
+                // convert numbers -> strings and 0 -> ""
+                const formatted = data.map(n => (n === 0 ? "" : String(n)));
+
+                setSquares(formatted);
+                console.log(formatted);
+            } catch (err) {
+                console.error("Failed to load sudoku", err);
+            }
+        }
+
+        getSudoku();
+    }, []);
 
     function onChangeSquare(i, newValue) {
         setSquares(prev => {
@@ -16,26 +36,25 @@ function App() {
     }
 
     return (
-        <>
-            <div
-                className="grid"
-                style={{
-                    display: "grid",
-                    gap: "5px",
-                    gridTemplateColumns: `repeat(9, 60px)`,
-                    gridTemplateRows: `repeat(9, 60px)`
-                }}
-            >
-                {squares.map((value, i) => (
-                    <Square
-                        key={i}
-                        value={value}
-                        onChange={(val) => onChangeSquare(i, val)}
-                    />
-                ))}
-            </div>
-        </>
-    )
+        <div
+            className="grid"
+            style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(9, 60px)",
+                gridTemplateRows: "repeat(9, 60px)",
+                border: "3px solid black"
+            }}
+        >
+            {squares.map((value, i) => (
+                <Square
+                    key={i}
+                    index={i}
+                    value={value}
+                    onChange={(val) => onChangeSquare(i, val)}
+                />
+            ))}
+        </div>
+    );
 }
 
 export default App;

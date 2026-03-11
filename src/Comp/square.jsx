@@ -1,14 +1,16 @@
-export default function Square({ value, onChange }) {
+export default function Square({ value, onChange, index }) {
+
+    const row = Math.floor(index / 9);
+    const col = index % 9;
+
     const handleChange = (e) => {
         const val = e.target.value;
 
-        // Allow empty string (so user can delete)
         if (val === "") {
             onChange("");
             return;
         }
 
-        // Only allow digits 1–9
         if (/^[1-9]$/.test(val)) {
             onChange(val);
         }
@@ -21,14 +23,17 @@ export default function Square({ value, onChange }) {
             onChange={handleChange}
             maxLength={1}
             style={{
-                fontWeight: 'bold',
-                resize: "none",
-                width: "50px",
-                height: "50px",
+                width: "60px",
+                height: "60px",
                 textAlign: "center",
-                fontSize: "24px",
-                lineHeight: "50px",
-                caretColor: "transparent"
+                fontSize: "26px",
+                fontWeight: "bold",
+                border: "1px solid black",
+
+                borderRight: col % 3 === 2 && col !== 8 ? "3px solid black" : "1px solid black",
+                borderBottom: row % 3 === 2 && row !== 8 ? "3px solid black" : "1px solid black",
+
+                outline: "none"
             }}
         />
     );
