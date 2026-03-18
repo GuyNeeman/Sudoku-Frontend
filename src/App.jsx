@@ -8,22 +8,20 @@ function App() {
 
     const [squares, setSquares] = useState(Array(boxes).fill(""));
 
+    const [given, setGiven] = useState(Array(boxes).fill(false));
+
     useEffect(() => {
         async function getSudoku() {
             try {
                 const res = await fetch("http://localhost:8080/api/sudoku/create");
                 const data = await res.json();
-
-                // convert numbers -> strings and 0 -> ""
                 const formatted = data.map(n => (n === 0 ? "" : String(n)));
-
                 setSquares(formatted);
-                console.log(formatted);
+                setGiven(formatted.map(v => v !== ""));
             } catch (err) {
                 console.error("Failed to load sudoku", err);
             }
         }
-
         getSudoku();
     }, []);
 
@@ -45,6 +43,7 @@ function App() {
                         key={i}
                         index={i}
                         value={value}
+                        isGiven={given[i]}  // NEW
                         onChange={(val) => onChangeSquare(i, val)}
                     />
                 ))}

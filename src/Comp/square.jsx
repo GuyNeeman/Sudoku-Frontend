@@ -1,18 +1,12 @@
-export default function Square({ value, onChange, index }) {
+export default function Square({ value, onChange, index, isGiven }) {
     const row = Math.floor(index / 9);
     const col = index % 9;
 
     const handleChange = (e) => {
+        if (isGiven) return;
         const val = e.target.value;
-
-        if (val === "") {
-            onChange("");
-            return;
-        }
-
-        if (/^[1-9]$/.test(val)) {
-            onChange(val);
-        }
+        if (val === "") { onChange(""); return; }
+        if (/^[1-9]$/.test(val)) onChange(val);
     };
 
     const borderStyle = {
@@ -28,6 +22,7 @@ export default function Square({ value, onChange, index }) {
             value={value}
             onChange={handleChange}
             maxLength={1}
+            readOnly={isGiven}
             style={{
                 width: "60px",
                 height: "60px",
@@ -35,8 +30,9 @@ export default function Square({ value, onChange, index }) {
                 fontSize: "28px",
                 fontWeight: "bold",
                 outline: "none",
-                color: "black",
-                backgroundColor: value ? "rgb(110,109,109)" : "white",
+                color: isGiven ? "#000" : "#6e6d6d",
+                backgroundColor: isGiven ? "#e9e9e9" : (value ? "rgb(110,109,109)" : "white"),
+                cursor: isGiven ? "default" : "pointer",
                 ...borderStyle
             }}
         />
