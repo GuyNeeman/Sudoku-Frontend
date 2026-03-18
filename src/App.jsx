@@ -36,23 +36,19 @@ function App() {
     }
 
     return (
-        <div
-            className="grid"
-            style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(9, 60px)",
-                gridTemplateRows: "repeat(9, 60px)",
-                border: "3px solid black"
-            }}
-        >
-            {squares.map((value, i) => (
-                <Square
-                    key={i}
-                    index={i}
-                    value={value}
-                    onChange={(val) => onChangeSquare(i, val)}
-                />
-            ))}
+        <div className="app">
+            <h1>Sudoku</h1>
+
+            <div className="grid">
+                {squares.map((value, i) => (
+                    <Square
+                        key={i}
+                        index={i}
+                        value={value}
+                        onChange={(val) => onChangeSquare(i, val)}
+                    />
+                ))}
+            </div>
         </div>
     );
 }

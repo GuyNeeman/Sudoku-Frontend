@@ -1,5 +1,4 @@
 export default function Square({ value, onChange, index }) {
-
     const row = Math.floor(index / 9);
     const col = index % 9;
 
@@ -16,6 +15,13 @@ export default function Square({ value, onChange, index }) {
         }
     };
 
+    const borderStyle = {
+        borderTop: row % 3 === 0 ? "3px solid black" : "1px solid #999",
+        borderLeft: col % 3 === 0 ? "3px solid black" : "1px solid #999",
+        borderRight: col === 8 ? "3px solid black" : "",
+        borderBottom: row === 8 ? "3px solid black" : "",
+    };
+
     return (
         <input
             type="text"
@@ -26,14 +32,12 @@ export default function Square({ value, onChange, index }) {
                 width: "60px",
                 height: "60px",
                 textAlign: "center",
-                fontSize: "26px",
+                fontSize: "28px",
                 fontWeight: "bold",
-                border: "1px solid black",
-
-                borderRight: col % 3 === 2 && col !== 8 ? "3px solid black" : "1px solid black",
-                borderBottom: row % 3 === 2 && row !== 8 ? "3px solid black" : "1px solid black",
-
-                outline: "none"
+                outline: "none",
+                color: "black",
+                backgroundColor: value ? "rgb(110,109,109)" : "white",
+                ...borderStyle
             }}
         />
     );
