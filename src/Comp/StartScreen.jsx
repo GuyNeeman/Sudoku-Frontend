@@ -6,7 +6,6 @@ export default function StartScreen({ setDifficulty }) {
     function handleSubmit() {
         if (!selected) return;
         setDifficulty(selected);
-        console.log(selected)
     }
 
     return (

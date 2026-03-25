@@ -9,29 +9,40 @@ function App() {
 
     const [squares, setSquares] = useState(Array(boxes).fill(""));
     const [given, setGiven] = useState(Array(boxes).fill(false));
-    const [difficulty, setDiffculty] = useState(null)
+    const [difficulty, setDifficulty] = useState(null);
+    const [solution, setSolution] = useState([]);
+    const [checked, setChecked] = useState(false);
+
+    async function getSudoku(diff) {
+        try {
+            const res = await fetch(`http://localhost:8080/api/sudoku/create/${diff}`);
+            const data = await res.json();
+
+            const puzzle = data.puzzle;
+            const solution = data.solution;
+
+            const formatted = puzzle.map(n => (n === 0 ? "" : String(n)));
+
+            setSquares(formatted);
+            setGiven(formatted.map(v => v !== ""));
+            setSolution(solution.map(n => String(n)));
+            setChecked(false);
+
+        } catch (err) {
+            console.error("Failed to load sudoku", err);
+        }
+    }
 
     useEffect(() => {
-        async function getSudoku() {
-            try {
-                const res = await fetch(`http://localhost:8080/api/sudoku/create/${difficulty}`);
-                const data = await res.json();
-
-                const puzzle = data.puzzle;
-                const solution = data.solution;
-
-                const formatted = puzzle.map(n => (n === 0 ? "" : String(n)));
-
-                setSquares(formatted);
-                setGiven(formatted.map(v => v !== ""));
-
-            } catch (err) {
-                console.error("Failed to load sudoku", err);
-            }
+        if (difficulty !== null) {
+            getSudoku(difficulty);
         }
+    }, [difficulty]);
 
-        getSudoku();
-    }, []);
+    function handleSubmit() {
+        setChecked(true);
+    }
+
 
     function onChangeSquare(i, newValue) {
         setSquares(prev => {
@@ -39,6 +50,8 @@ function App() {
             copy[i] = newValue;
             return copy;
         });
+
+        setChecked(false);
     }
 
     return (
@@ -46,20 +59,27 @@ function App() {
             <h1>Sudoku</h1>
 
             {difficulty==null && (
-            <StartScreen setDifficulty={setDiffculty}/>
+            <StartScreen setDifficulty={setDifficulty}/>
             )}
             {difficulty!==null && (
-                <div className="grid">
-                    {squares.map((value, i) => (
-                        <Square
-                            key={i}
-                            index={i}
-                            value={value}
-                            isGiven={given[i]}
-                            onChange={(val) => onChangeSquare(i, val)}
-                        />
-                    ))}
-                </div>
+                <>
+                    <div className="grid">
+                        {squares.map((value, i) => (
+                            <Square
+                                key={i}
+                                index={i}
+                                value={value}
+                                isGiven={given[i]}
+                                solutionValue={solution[i]}
+                                checked={checked}
+                                onChange={(val) => onChangeSquare(i, val)}
+                            />
+                        ))}
+                    </div>
+                    <button onClick={handleSubmit} style={{marginTop: "1rem"}}>
+                        Check Results
+                    </button>
+                </>
             )}
         </div>
     );
