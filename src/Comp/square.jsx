@@ -30,7 +30,7 @@ export default function Square({ value, onChange, index, isGiven }) {
                 fontSize: "28px",
                 fontWeight: "bold",
                 outline: "none",
-                color: isGiven ? "#000" : "#6e6d6d",
+                color: isGiven ? "#000" : "#bdb7b7",
                 backgroundColor: isGiven ? "#e9e9e9" : (value ? "rgb(110,109,109)" : "white"),
                 cursor: isGiven ? "default" : "pointer",
                 ...borderStyle
