@@ -15,7 +15,7 @@ function App() {
 
     async function getSudoku(diff) {
         try {
-            const res = await fetch(`http://localhost:8080/api/sudoku/create/${diff}`);
+            const res = await fetch(`https://sudokuapi-1.onrender.com/api/sudoku/create/${diff}`);
             const data = await res.json();
 
             const puzzle = data.puzzle;
@@ -32,6 +32,8 @@ function App() {
             console.error("Failed to load sudoku", err);
         }
     }
+
+    //To Do: Kommentar, Anzeigen was wo
 
     useEffect(() => {
         if (difficulty !== null) {
