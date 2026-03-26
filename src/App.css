@@ -36,3 +36,16 @@ input {
 input:focus {
   background: #e6f2ff;
 }
+
+.loading {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  text-align: center;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}

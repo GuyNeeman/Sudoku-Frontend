@@ -12,9 +12,12 @@ function App() {
     const [difficulty, setDifficulty] = useState(null);
     const [solution, setSolution] = useState([]);
     const [checked, setChecked] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     async function getSudoku(diff) {
         try {
+            setLoading(true);
+
             const res = await fetch(`https://sudokuapi-1.onrender.com/api/sudoku/create/${diff}`);
             const data = await res.json();
 
@@ -30,6 +33,8 @@ function App() {
 
         } catch (err) {
             console.error("Failed to load sudoku", err);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -60,10 +65,17 @@ function App() {
         <div className="app">
             <h1>Sudoku</h1>
 
-            {difficulty==null && (
-            <StartScreen setDifficulty={setDifficulty}/>
+            {difficulty === null && (
+                <StartScreen setDifficulty={setDifficulty} />
             )}
-            {difficulty!==null && (
+
+            {loading && (
+                <div className="loading">
+                    <p>Generating Sudoku...</p>
+                </div>
+            )}
+
+            {!loading && difficulty !== null && (
                 <>
                     <div className="grid">
                         {squares.map((value, i) => (
@@ -78,7 +90,8 @@ function App() {
                             />
                         ))}
                     </div>
-                    <button onClick={handleSubmit} style={{marginTop: "1rem"}}>
+
+                    <button onClick={handleSubmit} style={{ marginTop: "1rem" }}>
                         Check Results
                     </button>
                 </>
