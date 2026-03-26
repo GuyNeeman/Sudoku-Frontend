@@ -13,13 +13,34 @@ function App() {
     const [solution, setSolution] = useState([]);
     const [checked, setChecked] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [showLoader, setShowLoader] = useState(false);
 
     async function getSudoku(diff) {
         try {
             setLoading(true);
+            setProgress(0);
+
+            // Fake progress loop
+            let currentProgress = 0;
+            const interval = setInterval(() => {
+                currentProgress += Math.random() * 10;
+
+                if (currentProgress >= 90) {
+                    currentProgress = 90; // stop at 90% until API finishes
+                    clearInterval(interval);
+                }
+
+                setProgress(Math.floor(currentProgress));
+            }, 200);
 
             const res = await fetch(`https://sudokuapi-1.onrender.com/api/sudoku/create/${diff}`);
             const data = await res.json();
+
+            clearInterval(interval);
+
+            // finish progress smoothly
+            setProgress(100);
 
             const puzzle = data.puzzle;
             const solution = data.solution;
@@ -31,9 +52,13 @@ function App() {
             setSolution(solution.map(n => String(n)));
             setChecked(false);
 
+            // small delay so user sees 100%
+            setTimeout(() => {
+                setLoading(false);
+            }, 300);
+
         } catch (err) {
             console.error("Failed to load sudoku", err);
-        } finally {
             setLoading(false);
         }
     }
@@ -45,6 +70,21 @@ function App() {
             getSudoku(difficulty);
         }
     }, [difficulty]);
+
+    useEffect(() => {
+        let timeout;
+
+        if (loading) {
+            // only show loader after 300ms
+            timeout = setTimeout(() => {
+                setShowLoader(true);
+            }, 300);
+        } else {
+            setShowLoader(false);
+        }
+
+        return () => clearTimeout(timeout);
+    }, [loading]);
 
     function handleSubmit() {
         setChecked(true);
@@ -69,9 +109,18 @@ function App() {
                 <StartScreen setDifficulty={setDifficulty} />
             )}
 
-            {loading && (
+            {showLoader && (
                 <div className="loading">
                     <p>Generating Sudoku...</p>
+
+                    <div className="progress-bar">
+                        <div
+                            className="progress-fill"
+                            style={{ width: `${progress}%` }}
+                        />
+                    </div>
+
+                    <p>{progress}%</p>
                 </div>
             )}
 
