@@ -1,0 +1,39 @@
+.number-tracker {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+.number-box {
+    background: #222;
+    width: 45px;
+    height: 45px;
+    color: white;
+    border-radius: 8px;
+    padding: 6px;
+    text-align: center;
+    transition: 0.3s;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.number-box .number {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.number-box .remaining {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* when completed */
+.number-box.complete {
+    background: #7c7474; /* green */
+    color: white;
+}

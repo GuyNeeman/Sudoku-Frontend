@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Square from "./Comp/square.jsx";
 import StartScreen from "./Comp/StartScreen.jsx";
+import Number from "./Comp/Number.jsx";
 
 function App() {
     const size = 9;
@@ -126,6 +127,8 @@ function App() {
 
             {!loading && difficulty !== null && (
                 <>
+                    <Number squares={squares} />
+
                     <div className="grid">
                         {squares.map((value, i) => (
                             <Square
