@@ -35,7 +35,7 @@ function App() {
                 setProgress(Math.floor(currentProgress));
             }, 200);
 
-            const res = await fetch(`https://sudokuapi-1.onrender.com/api/sudoku/create/${diff}`);
+            const res = await fetch(`https://sudoku.guyneeman.com/api/sudoku/create/${diff}`);
             const data = await res.json();
 
             clearInterval(interval);
